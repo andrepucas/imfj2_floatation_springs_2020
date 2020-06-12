@@ -25,11 +25,31 @@ TXT_FLOAT = """
 || <mass>          = {1} kg 
 || <volume>        = {2} m^3
 ||
-|| FLUID AND GRAVITY:
+|| ENVIRONMENT:
 || <fluid> density = {3} kg/m^3 
 || <gravity>       = {4} m/s
 ||
 || From it's center, the cube floats at: {5} m.
+|| 
+|| (help): Type <help> for additional information.
+||
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+"""
+
+TXT_SPRING = """
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+||
+|| CEILING SPRING - CURRENT PARAMETERS:
+||
+|| SPRING:
+|| <rest> length   = {0} m
+|| <constant>      = {1} N/m 
+||
+|| ENVIRONMENT:
+|| <mass>          = {2} kg
+|| <gravity>       = {3} m/s
+||
+|| The spring would stretch to: {4} m.
 || 
 || (help): Type <help> for additional information.
 ||
@@ -52,6 +72,17 @@ TXT_HELP_F = """
 ??
 ?? (help): -> Examples: 
 ??         -> <set fluid 500> sets fluid value to 500.
+??         -> <quit> closes the program.
+??         -> <menu> returns you to the main menu.
+??
+???????????????????????????????????????????????????????????????????
+"""
+
+TXT_HELP_S = """
+???????????????????????????????????????????????????????????????????
+??
+?? (help): -> Examples: 
+??         -> <set rest 1> sets rest value to 1.
 ??         -> <quit> closes the program.
 ??         -> <menu> returns you to the main menu.
 ??
@@ -109,7 +140,7 @@ def floatation():
 
     while True:
 
-        # RELATIVE DEPTH WITH CENTER OF THE CUBE EXPLAINED
+        # RELATIVE DEPTH WITH CENTER OF THE CUBE - EXPLAINED
         # Gravitational Force = Buoyancy Force <=>
         # mass * gravity = fluid * gravity * volumeSubmerged <=>
         # mass = fluid * volumeSubmerged <=>
@@ -177,7 +208,72 @@ def floatation():
 
 ### Springs problem
 def springs():
-    print("springs option")
+    rest = 0.25
+    constant = 25
+    mass = 0.5
+    gravity = 9.81
+    gF = 4.905
+
+    while True:
+
+        # SPRING VERTICAL STRETCH - EXPLAINED
+        # Gravitational Force + Spring Force = 0 <=>
+        # - gravity * mass + (-constant * (stretch + rest)) = 0 <=>
+        # - gF - (constant * stretch) - (constant * rest) = 0 <=>
+        # - (constant * stretch) = gF + (constant * rest)
+        # - stretch = (gF + (constant*rest)) / - constant
+        stretch = (gF + (constant*rest)) / constant
+        print(gF)
+        print(TXT_SPRING.format(rest, constant, mass, gravity, stretch))
+
+        user_i = input(">> ")
+        user_i = user_i.strip().lower().split()
+
+        if (user_i[0] == "set"):
+
+            # Set spring rest length
+            if (user_i[1] == "rest"):
+                rest = float(user_i[2])
+
+            # Set spring constant
+            elif (user_i[1] == "constant"):
+                constant = float(user_i[2])
+
+            # Set object mass
+            elif (user_i[1] == "mass"):
+                mass = float(user_i[2])
+                # gF needs to be updated
+                gF = mass * gravity
+
+            # Set gravity
+            elif (user_i[1] == "gravity"):
+                gravity = float(user_i[2])
+                # gF needs to be updated
+                gF = mass * gravity
+
+            # Error box
+            else:
+                print(TXT_ERROR)
+                print(TXT_HELP_S)
+
+        # Help box
+        elif (user_i[0] == "help"):
+            print(TXT_HELP_S)
+
+        # Returns to menu
+        elif (user_i[0] == "menu"):
+            menu()
+            # exit() in case the user goes to the menu and types quit there
+            exit()
+
+        # Closes program
+        elif (user_i[0] == "quit"):
+            exit()
+
+        # Error box
+        else:
+            print(TXT_ERROR)
+            print(TXT_HELP_S)
 
 # Program starts running here
 menu()
