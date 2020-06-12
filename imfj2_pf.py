@@ -220,10 +220,10 @@ def springs():
         # Gravitational Force + Spring Force = 0 <=>
         # - gravity * mass + (-constant * (stretch + rest)) = 0 <=>
         # - gF - (constant * stretch) - (constant * rest) = 0 <=>
-        # - (constant * stretch) = gF + (constant * rest)
-        # - stretch = (gF + (constant*rest)) / - constant
+        # - (constant * stretch) = gF + (constant * rest) <=>
+        # - stretch = (gF + (constant*rest)) / - constant <=>
         stretch = (gF + (constant*rest)) / constant
-        print(gF)
+
         print(TXT_SPRING.format(rest, constant, mass, gravity, stretch))
 
         user_i = input(">> ")
